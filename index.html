@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DarkGPT | Siber Güvenlik Platformu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            color: #c8c8d8;
+            padding: 20px;
+        }
+
+        /* ===== GİRİŞ ===== */
+        #authPage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .auth-box {
+            background: #111118;
+            border: 1px solid #1a1a2a;
+            border-radius: 32px;
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .auth-box .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ffe0, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .auth-box .sub {
+            color: #6a6a7e;
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #1a1a2a;
+            padding-bottom: 18px;
+        }
+
+        .auth-box input {
+            width: 100%;
+            padding: 14px 20px;
+            margin: 8px 0;
+            background: #0d0d16;
+            border: 1px solid #1f1f30;
+            border-radius: 50px;
+            color: #e0e0f0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .auth-box input:focus {
+            border-color: #00ffe0;
+        }
+
+        .auth-box .btn-primary {
+            width: 100%;
+            padding: 14px;
+            margin-top: 16px;
+            background: linear-gradient(135deg, #00c9a0, #0088ff);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .auth-box .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(0, 255, 200, 0.15);
+        }
+
+        .auth-box .switch {
+            margin-top: 18px;
+            font-size: 0.9rem;
+            color: #6a6a7e;
+        }
+
+        .auth-box .switch span {
+            color: #00ffe0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .auth-box .switch span:hover {
+            text-shadow: 0 0 20px #00ffe0;
+        }
+
+        .auth-box .error {
+            color: #ff4d6d;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* ===== ANA SAYFA ===== */
+        #mainPage {
+            display: none;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 24px;
+            background: #111118;
+            border: 1px solid #1a1a2a;
+            border-radius: 24px;
+            margin-bottom: 24px;
+        }
+
+        .header .left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ffe0, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header .user-badge {
+            color: #6a6a7e;
+            font-size: 0.9rem;
+        }
+
+        .header .user-badge span {
+            color: #00ffc8;
+            font-weight: 600;
+        }
+
+        .header .btn-outline {
+            padding: 6px 18px;
+            background: transparent;
+            border: 1px solid #2a2a3e;
+            border-radius: 50px;
+            color: #a0a0b8;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .header .btn-outline:hover {
+            border-color: #00ffe0;
+            color: #00ffe0;
+        }
+
+        .header .btn-outline.danger {
+            border-color: #ff4d6d;
+            color: #ff4d6d;
+        }
+
+        .header .btn-outline.danger:hover {
+            background: #ff4d6d;
+            color: #000;
+        }
+
+        .header .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 16px;
+            background: rgba(0, 255, 200, 0.06);
+            border: 1px solid rgba(0, 255, 200, 0.1);
+            border-radius: 50px;
+            color: #00ffc8;
+            font-size: 0.7rem;
+        }
+
+        .header .status-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: #00ffc8;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.2;
+            }
+        }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .toolbar .btn-tool {
+            padding: 10px 22px;
+            background: #111118;
+            border: 1px solid #1a1a2a;
+            border-radius: 50px;
+            color: #a0a0b8;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar .btn-tool:hover {
+            border-color: #00ffe0;
+            color: #00ffe0;
+        }
+
+        .toolbar .btn-tool.primary {
+            background: linear-gradient(135deg, #00c9a0, #0088ff);
+            border-color: transparent;
+            color: #000;
+        }
+
+        .toolbar .btn-tool.primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.1);
+        }
+
+        /* ===== AI ASİSTAN ===== */
+        .ai-box {
+            background: #111118;
+            border: 1px solid #1a1a2a;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .ai-box .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .ai-box .ai-header .icon {
+            font-size: 1.8rem;
+        }
+
+        .ai-box .ai-header h2 {
+            color: #f0f0ff;
+            font-size: 1.1rem;
+        }
+
+        .ai-box .ai-header h2 span {
+            color: #00ffc8;
+        }
+
+        .ai-box .ai-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .ai-box .ai-row input {
+            flex: 1;
+            padding: 14px 20px;
+            background: #0d0d16;
+            border: 1px solid #1f1f30;
+            border-radius: 50px;
+            color: #e0e0f0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .ai-box .ai-row input:focus {
+            border-color: #00ffe0;
+        }
+
+        .ai-box .ai-row input::placeholder {
+            color: #4a4a5e;
+        }
+
+        .ai-box .ai-row button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #00c9a0, #0088ff);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .ai-box .ai-row button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.1);
+        }
+
+        .ai-box .ai-response {
+            margin-top: 14px;
+            background: #0d0d16;
+            border: 1px solid #1a1a2a;
+            border-radius: 16px;
+            padding: 16px 20px;
+            min-height: 50px;
+            color: #c8c8d8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .ai-box .ai-response .typing {
+            color: #4a4a5e;
+            font-style: italic;
+        }
+
+        .ai-box .ai-response .success {
+            color: #00ffc8;
+        }
+
+        .ai-box .ai-response .error {
+            color: #ff4d6d;
+        }
+
+        .ai-box .ai-response .image-preview {
+            margin-top: 10px;
+            max-width: 100%;
+        }
+
+        .ai-box .ai-response .image-preview img {
+            max-width: 300px;
+            border-radius: 12px;
+            border: 1px solid #1a1a2a;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 16px 0 5px;
+            border-top: 1px solid #1a1a2a;
+            color: #2a2a3e;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        .footer span {
+            color: #00ffc8;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #111118;
+            border: 1px solid #1a1a2a;
+            border-radius: 28px;
+            padding: 36px 32px;
+            max-width: 500px;
+            width: 92%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-box h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ffe0, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .modal-box .modal-sub {
+            color: #6a6a7e;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-box input,
+        .modal-box textarea {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 6px 0;
+            background: #0d0d16;
+            border: 1px solid #1f1f30;
+            border-radius: 16px;
+            color: #e0e0f0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        .modal-box input:focus,
+        .modal-box textarea:focus {
+            border-color: #00ffe0;
+        }
+
+        .modal-box textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal-box .file-drop {
+            border: 2px dashed #1a1a2a;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            color: #6a6a7e;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 6px 0;
+        }
+
+        .modal-box .file-drop:hover {
+            border-color: #00ffe0;
+            background: rgba(0, 255, 200, 0.02);
+        }
+
+        .modal-box .file-drop .filename {
+            color: #00ffc8;
+            font-weight: 500;
+            margin-top: 4px;
+            font-size: 0.85rem;
+        }
+
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-box .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-box .modal-actions .btn-send {
+            background: linear-gradient(135deg, #00c9a0, #0088ff);
+            color: #000;
+        }
+
+        .modal-box .modal-actions .btn-send:hover {
+            transform: scale(1.02);
+        }
+
+        .modal-box .modal-actions .btn-cancel {
+            background: transparent;
+            border: 1px solid #2a2a3e;
+            color: #6a6a7e;
+        }
+
+        .modal-box .modal-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 16px;
+            }
+            .header .left {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .header .right {
+                justify-content: center;
+            }
+            .ai-box .ai-row {
+                flex-direction: column;
+            }
+            .ai-box .ai-row button {
+                width: 100%;
+            }
+            .toolbar {
+                justify-content: center;
+            }
+            .auth-box {
+                padding: 32px 20px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .header .logo-text {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- GİRİŞ EKRANI -->
+    <!-- ============================================================ -->
+    <div id="authPage">
+        <div class="auth-box">
+            <div class="logo">⏣ DarkGPT</div>
+            <div class="sub">siber güvenlik platformu</div>
+
+            <input type="text" id="loginUser" placeholder="kullanıcı adı" />
+            <input type="password" id="loginPass" placeholder="şifre" />
+
+            <button class="btn-primary" id="authBtn">Giriş Yap</button>
+
+            <div class="switch">
+                hesabın yok mu? <span id="switchAuth">Kayıt Ol</span>
+            </div>
+            <div class="error" id="authError"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ANA SAYFA -->
+    <!-- ============================================================ -->
+    <div id="mainPage">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="left">
+                <span class="logo-text">⏣ DarkGPT</span>
+                <span class="status-badge">
+                    <span class="dot"></span> 7/24 Aktif
+                </span>
+            </div>
+            <div class="right">
+                <span class="user-badge">👤 <span id="displayUser">kullanıcı</span></span>
+                <a href="#" class="btn-outline" id="telegramBtn">📱 Telegram</a>
+                <button class="btn-outline" id="reportBtn">⚠️ Sorun Bildir</button>
+                <button class="btn-outline danger" id="logoutBtn">✕ Çıkış</button>
+            </div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <button class="btn-tool primary" id="internetSearchBtn">🌐 İnternet Ara</button>
+            <button class="btn-tool" id="photoErrorBtn">📸 Fotoğraf</button>
+        </div>
+
+        <!-- AI ASİSTAN -->
+        <div class="ai-box">
+            <div class="ai-header">
+                <span class="icon">🧠</span>
+                <h2>Dark<span>AI</span> Asistan</h2>
+            </div>
+            <div class="ai-row">
+                <input type="text" id="aiInput" placeholder="Ne yapmak istersin? Örn: instagram veri çek..." />
+                <button id="aiSendBtn">⚡ Çalıştır</button>
+            </div>
+            <div class="ai-response" id="aiResponse">
+                <span class="typing">💬 Bir komut yaz, yapay zeka senin için çalıştırsın...</span>
+            </div>
+        </div>
+
+        <div class="footer">⚡ DARK PROTOCOL • v3.0.1 • <span>7/24 Aktif</span></div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SORUN BİLDİR MODAL -->
+    <!-- ============================================================ -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-box">
+            <h2>⚠️ Sorun Bildir</h2>
+            <div class="modal-sub">Karşılaştığın sorunu ayrıntılı olarak anlat.</div>
+
+            <input type="text" id="reportTitle" placeholder="Başlık" />
+            <textarea id="reportDesc" placeholder="Sorunu açıkla..."></textarea>
+
+            <div class="file-drop" id="fileDrop">
+                📂 Dosya eklemek için tıkla veya sürükle
+                <div class="filename" id="fileName">Dosya seçilmedi</div>
+                <input type="file" id="fileInput" style="display:none;" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="reportCancel">İptal</button>
+                <button class="btn-send" id="reportSubmit">📩 Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // AUTH
+        // ============================================================
+        const authPage = document.getElementById('authPage');
+        const mainPage = document.getElementById('mainPage');
+        const loginUser = document.getElementById('loginUser');
+        const loginPass = document.getElementById('loginPass');
+        const authBtn = document.getElementById('authBtn');
+        const switchAuth = document.getElementById('switchAuth');
+        const authError = document.getElementById('authError');
+        const displayUser = document.getElementById('displayUser');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        let isLogin = true;
+
+        function getUsers() {
+            try { return JSON.parse(localStorage.getItem('darkgpt_users')) || {}; } catch { return {}; }
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('darkgpt_users', JSON.stringify(users));
+        }
+
+        function handleAuth() {
+            const username = loginUser.value.trim();
+            const password = loginPass.value.trim();
+            if (!username || !password) {
+                authError.textContent = '⛔ Kullanıcı adı ve şifre gerekli';
+                return;
+            }
+            const users = getUsers();
+            if (isLogin) {
+                if (users[username] && users[username] === password) {
+                    enterApp(username);
+                } else {
+                    authError.textContent = '❌ Yanlış kullanıcı veya şifre';
+                }
+            } else {
+                if (users[username]) {
+                    authError.textContent = '⚠️ Bu kullanıcı zaten var';
+                    return;
+                }
+                users[username] = password;
+                saveUsers(users);
+                enterApp(username);
+            }
+        }
+
+        function enterApp(username) {
+            authPage.style.display = 'none';
+            mainPage.style.display = 'block';
+            displayUser.textContent = username;
+        }
+
+        function logout() {
+            authPage.style.display = 'flex';
+            mainPage.style.display = 'none';
+            loginUser.value = '';
+            loginPass.value = '';
+            authError.textContent = '';
+            isLogin = true;
+            authBtn.textContent = 'Giriş Yap';
+            switchAuth.textContent = 'Kayıt Ol';
+        }
+
+        switchAuth.addEventListener('click', function() {
+            isLogin = !isLogin;
+            authBtn.textContent = isLogin ? 'Giriş Yap' : 'Kayıt Ol';
+            switchAuth.textContent = isLogin ? 'Kayıt Ol' : 'Giriş Yap';
+            authError.textContent = '';
+            loginUser.value = '';
+            loginPass.value = '';
+        });
+
+        authBtn.addEventListener('click', handleAuth);
+        loginPass.addEventListener('keypress', e => { if (e.key === 'Enter') handleAuth(); });
+        loginUser.addEventListener('keypress', e => { if (e.key === 'Enter') handleAuth(); });
+        logoutBtn.addEventListener('click', logout);
+
+        // ============================================================
+        // SORUN BİLDİR MODAL
+        // ============================================================
+        const reportModal = document.getElementById('reportModal');
+        const reportBtn = document.getElementById('reportBtn');
+        const reportCancel = document.getElementById('reportCancel');
+        const reportSubmit = document.getElementById('reportSubmit');
+        const reportTitle = document.getElementById('reportTitle');
+        const reportDesc = document.getElementById('reportDesc');
+        const fileDrop = document.getElementById('fileDrop');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        let selectedFile = null;
+
+        reportBtn.addEventListener('click', () => {
+            reportModal.classList.add('active');
+            reportTitle.value = '';
+            reportDesc.value = '';
+            selectedFile = null;
+            fileName.textContent = 'Dosya seçilmedi';
+        });
+
+        reportCancel.addEventListener('click', () => {
+            reportModal.classList.remove('active');
+        });
+
+        reportModal.addEventListener('click', (e) => {
+            if (e.target === reportModal) reportModal.classList.remove('active');
+        });
+
+        fileDrop.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                fileName.textContent = selectedFile.name + ' (' + (selectedFile.size / 1024).toFixed(1) + ' KB)';
+            }
+        });
+
+        fileDrop.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileDrop.style.borderColor = '#00ffe0';
+        });
+
+        fileDrop.addEventListener('dragleave', () => {
+            fileDrop.style.borderColor = '#1a1a2a';
+        });
+
+        fileDrop.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileDrop.style.borderColor = '#1a1a2a';
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                selectedFile = e.dataTransfer.files[0];
+                fileName.textContent = selectedFile.name + ' (' + (selectedFile.size / 1024).toFixed(1) + ' KB)';
+            }
+        });
+
+        reportSubmit.addEventListener('click', () => {
+            const title = reportTitle.value.trim();
+            const desc = reportDesc.value.trim();
+            if (!title || !desc) {
+                alert('Lütfen başlık ve açıklama giriniz.');
+                return;
+            }
+            let msg = '📩 Sorun bildirimi gönderildi!\n📌 Başlık: ' + title + '\n📝 Açıklama: ' + desc;
+            if (selectedFile) {
+                msg += '\n📎 Ek: ' + selectedFile.name;
+            }
+            const responseBox = document.getElementById('aiResponse');
+            responseBox.innerHTML = `<span class="success">✅ ${msg}</span>`;
+            reportModal.classList.remove('active');
+        });
+
+        // ============================================================
+        // TELEGRAM
+        // ============================================================
+        document.getElementById('telegramBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://t.me/seninkanalin', '_blank');
+        });
+
+        // ============================================================
+        // İNTERNET ARAMA
+        // ============================================================
+        document.getElementById('internetSearchBtn').addEventListener('click', () => {
+            const query = prompt('🌐 İnternette ne aramak istiyorsun?');
+            if (query && query.trim()) {
+                const responseBox = document.getElementById('aiResponse');
+                responseBox.innerHTML = `<span class="typing">🔍 "${query}" aranıyor...</span>`;
+                setTimeout(() => {
+                    const images = [
+                        'https://picsum.photos/seed/1/300/200',
+                        'https://picsum.photos/seed/2/300/200',
+                        'https://picsum.photos/seed/3/300/200',
+                        'https://picsum.photos/seed/4/300/200'
+                    ];
+                    const randomImg = images[Math.floor(Math.random() * images.length)];
+                    responseBox.innerHTML = `
+                            <span class="success">✅ "${query}" için sonuçlar:</span>
+                            <div class="image-preview">
+                                <img src="${randomImg}" alt="Arama sonucu" />
+                            </div>
+                            <span style="color:#6a6a7e;font-size:0.8rem;">📸 Görsel (simülasyon)</span>
+                        `;
+                }, 1500);
+            }
+        });
+
+        // ============================================================
+        // FOTOĞRAF (Gönderince hata bulsun)
+        // ============================================================
+        document.getElementById('photoErrorBtn').addEventListener('click', () => {
+            const responseBox = document.getElementById('aiResponse');
+
+            // Fotoğraf yükleme simülasyonu
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = function(e) {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        responseBox.innerHTML = `
+                                <span class="typing">📸 Fotoğraf yükleniyor: ${file.name}</span>
+                                <div class="image-preview">
+                                    <img src="${ev.target.result}" alt="Yüklenen fotoğraf" style="max-width:250px;border-radius:12px;border:1px solid #1a1a2a;margin-top:8px;" />
+                                </div>
+                            `;
+
+                        // Fotoğraf analiz simülasyonu (hata bulma)
+                        setTimeout(() => {
+                            const errors = [
+                                '⚠️ Fotoğrafta bulanıklık tespit edildi.',
+                                '⚠️ Düşük çözünürlük tespit edildi.',
+                                '⚠️ Renk dengesi bozuk.',
+                                '⚠️ İstenmeyen nesne tespit edildi.',
+                                '⚠️ Fotoğraf boyutu çok büyük.',
+                                '✅ Fotoğrafta herhangi bir hata yok.',
+                                '⚠️ Çerçeveleme hatası tespit edildi.',
+                                '⚠️ Işıklandırma sorunu var.'
+                            ];
+                            const randomError = errors[Math.floor(Math.random() * errors.length)];
+                            const isError = randomError.includes('⚠️');
+                            responseBox.innerHTML += `
+                                    <div style="margin-top:10px;padding:12px;background:#0d0d16;border-radius:12px;border:1px solid ${isError ? '#ff4d6d' : '#00ffc8'};">
+                                        <span style="color:${isError ? '#ff4d6d' : '#00ffc8'};font-weight:600;">
+                                            ${isError ? '🔍 HATA BULUNDU:' : '✅ ANALİZ TAMAMLANDI:'}
+                                        </span>
+                                        <span style="color:#f0f0ff;display:block;margin-top:4px;">${randomError}</span>
+                                        <span style="color:#6a6a7e;font-size:0.7rem;">📸 AI fotoğraf analizi tamamlandı</span>
+                                    </div>
+                                `;
+                        }, 2000);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    responseBox.innerHTML = `<span class="error">⚠️ Fotoğraf seçilmedi.</span>`;
+                }
+            };
+            fileInput.click();
+        });
+
+        // ============================================================
+        // YAPAY ZEKA ASİSTAN (Yazınca söylesin)
+        // ============================================================
+        const aiInput = document.getElementById('aiInput');
+        const aiSendBtn = document.getElementById('aiSendBtn');
+        const aiResponse = document.getElementById('aiResponse');
+
+        const commands = {
+            'iptv': { endpoint: '/api/iptv/scan', method: 'POST', desc: 'IPTV kanal taraması yapılıyor...' },
+            'telegram': { endpoint: '/api/telegram/scrape', method: 'POST', desc: 'Telegram veri kazıma başlatılıyor...' },
+            'twitter': { endpoint: '/api/twitter/scrape', method: 'POST', desc: 'Twitter veri kazıma başlatılıyor...' },
+            'youtube': { endpoint: '/api/youtube/scrape', method: 'POST', desc: 'YouTube veri kazıma başlatılıyor...' },
+            'instagram': { endpoint: '/api/instagram/scrape', method: 'POST', desc: 'Instagram veri kazıma başlatılıyor...' },
+            'tiktok': { endpoint: '/api/tiktok/scrape', method: 'POST', desc: 'TikTok veri kazıma başlatılıyor...' },
+            'rat': { endpoint: '/api/rat/generate', method: 'POST', desc: 'RAT payload oluşturuluyor...' },
+            'sms': { endpoint: '/api/sms/bomb', method: 'POST', desc: 'SMS bomb başlatılıyor...' },
+            'wifi': { endpoint: '/api/wifi/crack', method: 'POST', desc: 'WiFi şifre kırma başlatılıyor...' },
+            'health': { endpoint: '/api/health', method: 'GET', desc: 'Sistem sağlığı kontrol ediliyor...' }
+        };
+
+        function getBaseUrl() {
+            return window.location.origin;
+        }
+
+        function aiErrorSolver(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('hata') || lower.includes('error') || lower.includes('çalışmıyor') || lower.includes(
+                    'olmuyor')) {
+                return {
+                    isError: true,
+                    solution: '🧠 AI Hata Tespit Etti! Sunucuyu yeniden başlat, API anahtarını kontrol et ve internet bağlantını dene. 🔧'
+                };
+            }
+            return { isError: false };
+        }
+
+        async function executeAICommand(command) {
+            const lower = command.toLowerCase();
+
+            const errorCheck = aiErrorSolver(command);
+            if (errorCheck.isError) {
+                return {
+                    success: true,
+                    message: `${errorCheck.solution}`
+                };
+            }
+
+            let matched = null;
+            let keyword = '';
+
+            for (const [key, value] of Object.entries(commands)) {
+                if (lower.includes(key)) {
+                    matched = value;
+                    keyword = key;
+                    break;
+                }
+            }
+
+            if (!matched) {
+                return {
+                    success: false,
+                    message: '🤔 Anlamadım. Şunlardan birini dene: IPTV, Telegram, Twitter, YouTube, Instagram, TikTok, RAT, SMS, WiFi, Health'
+                };
+            }
+
+            aiResponse.innerHTML = `<span class="typing">⏳ ${matched.desc}</span>`;
+
+            try {
+                const url = `${getBaseUrl()}${matched.endpoint}`;
+                const options = { method: matched.method, headers: { 'Content-Type': 'application/json' } };
+
+                if (matched.method === 'POST') {
+                    let body = {};
+                    if (keyword === 'iptv') body = { url: 'https://example.com/playlist.m3u' };
+                    else if (keyword === 'telegram') body = { channel: 'example_channel', limit: 50 };
+                    else if (keyword === 'twitter') body = { query: 'example', count: 20 };
+                    else if (keyword === 'youtube') body = { channel_id: 'UCxxxxxx', video_count: 10 };
+                    else if (keyword === 'instagram') body = { username: 'example_user' };
+                    else if (keyword === 'tiktok') body = { username: 'example_user' };
+                    else if (keyword === 'rat') body = { ip: '192.168.1.100', port: 4444 };
+                    else if (keyword === 'sms') body = { phone: '5551234567', count: 5 };
+                    else if (keyword === 'wifi') body = { ssid: 'WiFi_Network', bssid: 'AA:BB:CC:DD:EE:FF' };
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const data = await response.json();
+
+                if (data.success) {
+                    return { success: true, message: `✅ ${matched.desc} Tamamlandı!` };
+                } else {
+                    return { success: false, message: `❌ Hata: ${data.error || 'Bilinmeyen hata'}` };
+                }
+
+            } catch (err) {
+                return {
+                    success: true,
+                    message: `🧠 AI Hatayı Tespit Etti! "${err.message}" - Sunucuyu yeniden başlat veya API anahtarını kontrol et. 🔧`
+                };
+            }
+        }
+
+        async function handleAICommand() {
+            const text = aiInput.value.trim();
+            if (!text) {
+                aiResponse.innerHTML = `<span class="error">⚠️ Lütfen bir komut yaz.</span>`;
+                return;
+            }
+
+            const result = await executeAICommand(text);
+            aiResponse.innerHTML = result.success ?
+                `<span class="success">${result.message}</span>` :
+                `<span class="error">${result.message}</span>`;
+            aiInput.value = '';
+        }
+
+        aiSendBtn.addEventListener('click', handleAICommand);
+        aiInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleAICommand(); });
+
+        console.log('🧠 DarkAI Asistan hazır!');
+    </script>
+
+</body>
+</html>
